@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-10">
+  <button id="showModal" class="button is-success">
+    <span class="icon is-small">
+      <i class="fas fa-check"></i>
+    </span>
+    <span>Nouveau</span>
+  </button>
+  <table class="table is-fullwidth is-hoverable  is-striped">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in users %}
+      <tr>
+        <td> {{ item.name }}</td>
+        <td> {{ item.email }}</td>
+        <td>
+          <button class="button is-danger is-small">supprimer</button>
+          <button class="button is-primary is-small">modifer</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Nouvel utilisateur</p>
+        <button class="delete modal-close" aria-label="close"></button>
+      </header>
+      <form method="POST" action="/new_user">
+        <section class="modal-card-body is-clipped">
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="name" placeholder="Nom">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="firstname" placeholder="Prénom">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="email" placeholder="Email">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="password" placeholder="Mot de passe (par défaut)">
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success">Enregistrer</button>
+          <button class="button">Quitter</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
