@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-10">
+    <table class="table is-fullwidth is-hoverable  is-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Signer Host</th>
+                <th>Signer IP</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in personnes %}
+            <tr>
+                <td> {{ item.name }} </td>
+                <td> {{ item.first_name }} </td>
+                <td> {{ item.email }} </td>
+                <td> {{ item.telephone }} </td>
+                <td>
+                    <a href="{{ '/delete_personne/%s'%item.id }}" class="button is-danger is-small">supprimer</a>
+                    <a class="button is-primary is-small">modifer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="modal-form" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Personne</p>
+                <button class="delete modal-close" aria-label="close"></button>
+            </header>
+            <form method="POST" enctype=multipart/form-data action="/new_personne">
+                <section class="modal-card-body is-clipped">
+                    <article class="media">
+                        <figure class="media-left">
+                            <p class="image is-128x128">
+                                <img id="img_display" src="https://bulma.io/images/placeholders/128x128.png">
+                            </p>
+
+                            <div class="upload-btn-wrapper">
+                                <button class="button is-success is-small">
+                                    Choisir
+                                </button>
+                                <input class="input" id="img_person" type="file" name="img" required>
+                            </div>
+
+                        </figure>
+                        <div class="media-content">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="name" placeholder="Nom" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="first_name" placeholder="Prénom" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="email" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="telephone" placeholder="Téléphone">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="addresse" placeholder="Adresse">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Enregistrer</button>
+                    <button class="button">Quitter</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Crop modal -->
+
+    <!-- <div id="modal-crop" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Image</p>
+                <button class="delete modal-crop-close" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <div>
+                    <p class="image is-2by3">
+                        <img id="img_display" src="#">
+                    </p>
+                </div>
+                <div class="upload-btn-wrapper">
+                    <button class="button is-success is-small">
+                        Choisir
+                    </button>
+                    <input class="input" id="img_person" type="file" name="img_path">
+                </div>
+            </section>
+        </div>
+    </div>
+     -->
+    <!-- Crop modal -->
+</div>
+</div>
+
+{% endblock %}

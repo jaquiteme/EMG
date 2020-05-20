@@ -15,3 +15,12 @@ class Personne(db.Model):
     addresse = db.Column(db.String(100))
     telephone = db.Column(db.String(10), unique=True)
     img_path = db.Column(db.String(150))
+    signings =db.relationship('Signing', backref='personne', lazy=True)
+
+class Signing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    personne_id = db.Column(db.Integer, db.ForeignKey("personne.id"), nullable=False)
+    signer_host = db.Column(db.String(100))
+    signer_ip = db.Column(db.String(100))
+    signing_date = db.Column(db.Date)
+    signing_updated = db.Column(db.Date)

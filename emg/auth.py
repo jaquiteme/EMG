@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import login_user, login_required, logout_user
-from .models import User, Personne
+from .models import User, Personne, Signing
 from . import db
 import os
 from .backend import face_cropper
@@ -155,3 +155,8 @@ def delete_personne(req_id):
     db.session.commit()
 
     return redirect(url_for('auth.personnes'))
+
+@auth.route('/signing')
+def signing():
+    signings = Signing.query.all()
+    return render_template('signing.html', signings=signings)

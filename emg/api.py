@@ -30,10 +30,11 @@ def recognition():
     #    return make_response(jsonify({'message':'aucune image envoyée'}), 400)
     
     # if _file and allowed_file(_file.filename):
-    faces = facial.face_reco(new_img)
-    
-    r = {}
-    r['message'] = "le nombre de visages detecte: {}".format(len(faces))
-    r['known_faces'] = "{}".format(faces)
+    personne_info, faces_found = facial.face_reco(new_img)
+    r = {'faces': faces_found, 'known_faces': personne_info }
+    # r['faces'] = "{}".format(faces_found)
+    # r['known_faces'] = "{}".format(personne_info)
 
-    return json.dumps(r)
+    print(r)
+
+    return r
