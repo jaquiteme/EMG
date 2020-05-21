@@ -23,4 +23,9 @@ class Signing(db.Model):
     signer_host = db.Column(db.String(100))
     signer_ip = db.Column(db.String(100))
     signing_date = db.Column(db.Date)
-    signing_updated = db.Column(db.Date)
+    signing_updated = db.Column(db.DateTime)
+
+class Watcher(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    db_name = db.Column(db.String(100), unique=True)
+    revision = db.Column(db.Integer)

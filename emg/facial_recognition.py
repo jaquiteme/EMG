@@ -6,10 +6,25 @@ import numpy as np
 from imutils import face_utils
 #import argparse
 from pathlib import Path
+import json
 import os
 import ntpath
+import datetime
+import base64
 from . import db
-from .models import Personne
+from .models import Personne, Signing, Watcher
+
+class NumpyArrayEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
+class SigningEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Signing):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
 
 class FaceRecognition(object):
 
@@ -88,12 +103,53 @@ class FaceRecognition(object):
                 p = getPersonne(id)
                 personne_info.append({'id':p.id, 'name': p.name, 'firstname': p.first_name})
                 faces_found = faces_found + 1
+                signFaces(id, 'HUAWEI', '192.168.43.223')
             else:
                 u_name = "Unknown"
                 faces_found = faces_found + 1
 
         return personne_info, faces_found
 
+    def sync(self, revision):
+        watcher = Watcher.query.filter_by(db_name='personne').first()
+        if(watcher.revision > revision):
+            personnes = []
+            allPersonne = Personne.query.all()
+            vector_known_faces = self.known_faces_encode()
+            for p in allPersonne:
+                personnes.append({'id':p.id, 'name':p.name, 'first_name':p.first_name })
+
+            numpyData = {'vectors': vector_known_faces, 'database':personnes}
+        else:
+            numpyData = {'vectors': 'ok', 'database':'ok'}
+            
+        encodedNumpyData = json.dumps(numpyData, cls=NumpyArrayEncoder)
+        return encodedNumpyData
+
+    def getAllSignings(self, signer_host):
+        s = db.session.query(Signing).filter_by(signer_host=signer_host).join(Personne).all()
+        signings = []
+        for signing in s:
+            signings.append({'personne_id':signing.personne.id,'name':signing.personne.name,
+             'firstname':signing.personne.first_name, 'date':signing.signing_date, 
+             'updated':signing.signing_updated}) 
+               
+        return signings
+
 def getPersonne(id):
     personne = Personne.query.filter_by(id=id).first()
     return personne
+
+def signFaces(id, signer_host, signer_ip):
+    now = datetime.datetime.now()
+    signing_date = now.strftime("%Y-%m-%d")
+    old_sign = Signing.query.filter_by(personne_id=id, signing_date=signing_date).first()
+    if(old_sign):
+        sign = Signing.query.filter_by(personne_id=id).first()
+        sign.signing_updated = now
+    else:
+        sign = Signing(personne_id=id, signer_host=signer_host, signer_ip=signer_ip, signing_date=now, signing_updated=now)
+
+    db.session.add(sign)
+    db.session.commit()
+

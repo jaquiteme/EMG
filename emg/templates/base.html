@@ -28,21 +28,6 @@
                     <a href="{{ url_for('main.index') }}" class="navbar-item">
                         Acceuil
                     </a>
-                    {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('main.dashboard') }}" class="navbar-item">
-                        Dashboard
-                    </a>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.users') }}" class="navbar-item">
-                        Utilisateurs
-                    </a>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.personnes') }}" class="navbar-item">
-                        Personnes
-                    </a>
-                    {% endif %}
                     {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.login') }}" class="navbar-item">
                         Connexion
@@ -64,8 +49,38 @@
 
     <div class="hero-body">
         <div class="container">
-            {% block content %}
-            {% endblock %}
+            <div class="columns">
+                {% if current_user.is_authenticated %}
+                <div class="column is-2 ">
+                    <aside class="menu is-hidden-mobile">
+                        <p class="menu-label">
+                            General
+                        </p>
+                        <ul class="menu-list">
+
+                            <li><a href="{{ url_for('main.dashboard') }}" class="is-active navbar-item">
+                                    Dashboard
+                                </a></li>
+
+                            <li><a href="{{ url_for('auth.users') }}" class="navbar-item">
+                                    Utilisateurs
+                                </a></li>
+                            <li><a href="{{ url_for('auth.personnes') }}" class="navbar-item">
+                                    Personnes
+                                </a></li>
+
+                            <li><a href="{{ url_for('auth.signing') }}" class="navbar-item">
+                                    Emargements
+                                </a></li>
+
+                        </ul>
+                    </aside>
+
+                </div>
+                {% endif %}
+                {% block content %}
+                {% endblock %}
+            </div>
         </div>
     </div>
     <footer>

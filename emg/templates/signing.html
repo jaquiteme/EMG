@@ -10,22 +10,24 @@
                 <th>Signer Host</th>
                 <th>Signer IP</th>
                 <th>Date</th>
-                <th>Actions</th>
+                <th>Updated</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in personnes %}
+            {% for item in signings %}
             <tr>
-                <td> {{ item.name }} </td>
-                <td> {{ item.first_name }} </td>
-                <td> {{ item.email }} </td>
-                <td> {{ item.telephone }} </td>
-                <td>
+                <td> {{ item.personne.name }} </td>
+                <td> {{ item.personne.first_name }} </td>
+                <td> {{ item.signer_host }} </td>
+                <td> {{ item.signer_ip }} </td>
+                <td> {{ item.signing_date }} </td>
+                <td> {{ item.signing_updated }} </td>
+                <!-- <td>
                     <a href="{{ '/delete_personne/%s'%item.id }}" class="button is-danger is-small">supprimer</a>
                     <a class="button is-primary is-small">modifer</a>
-                </td>
+                </td> -->
             </tr>
-            {% endfor %}
+            {% endfor %} 
         </tbody>
     </table>
 

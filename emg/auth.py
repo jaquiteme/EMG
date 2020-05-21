@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import login_user, login_required, logout_user
-from .models import User, Personne, Signing
+from .models import User, Personne, Signing, Watcher
 from . import db
 import os
 from .backend import face_cropper
@@ -141,8 +141,11 @@ def new_personne():
         img_path = detecter.generate(_file, name, first_name)
 
     new_personne = Personne(name=name, first_name=first_name, email=email, addresse=addresse, telephone=telephone, img_path=img_path)
+    watcher = Watcher.query.filter_by(db_name='personne').first()
+    watcher.revision = watcher.revision + 1
 
     db.session.add(new_personne)
+    db.session.add(watcher)
     db.session.commit()
 
     return redirect(url_for('auth.personnes'))
@@ -158,5 +161,5 @@ def delete_personne(req_id):
 
 @auth.route('/signing')
 def signing():
-    signings = Signing.query.all()
+    signings = db.session.query(Signing).join(Personne).all()
     return render_template('signing.html', signings=signings)

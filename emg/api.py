@@ -38,3 +38,14 @@ def recognition():
     print(r)
 
     return r
+
+@api.route('/api/synchronization/<revision>', methods=['GET'])
+def synchronization(revision):
+    vectors_known = facial.sync(int(revision))
+    return vectors_known
+
+@api.route('/api/signings/<signer_host>', methods=['GET'])
+def signings(signer_host):
+    signings = facial.getAllSignings(signer_host)
+    r = {'signings': signings}
+    return r
