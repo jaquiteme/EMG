@@ -20,6 +20,7 @@ def allowed_file(filename):
 @api.route('/api/recognition', methods=['POST'])
 def recognition():
     new_img = base64.b64decode(request.form['img'])
+    remote_addr = request.remote_addr
     # print(new_img.fi)
     # if 'img' not in request.files:
     #     return make_response(jsonify({'message':'aucune image envoyée'}), 400)
@@ -30,7 +31,7 @@ def recognition():
     #    return make_response(jsonify({'message':'aucune image envoyée'}), 400)
     
     # if _file and allowed_file(_file.filename):
-    personne_info, faces_found = facial.face_reco(new_img)
+    personne_info, faces_found = facial.face_reco(new_img, remote_addr)
     r = {'faces': faces_found, 'known_faces': personne_info }
     # r['faces'] = "{}".format(faces_found)
     # r['known_faces'] = "{}".format(personne_info)

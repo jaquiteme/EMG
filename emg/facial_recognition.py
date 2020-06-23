@@ -75,7 +75,7 @@ class FaceRecognition(object):
 
         return face_encodings_list, face_locations, landmarks_list
 
-    def face_reco(self, image):
+    def face_reco(self, image, remote_addr):
         # nparr = np.fromstring(image.read(), np.uint8)
         nparr = np.fromstring(image, np.uint8)
         rgb_small_frame = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
@@ -103,13 +103,14 @@ class FaceRecognition(object):
                 p = getPersonne(id)
                 personne_info.append({'id':p.id, 'name': p.name, 'firstname': p.first_name})
                 faces_found = faces_found + 1
-                signFaces(id, 'HUAWEI', '192.168.43.223')
+                signFaces(id, 'HUAWEI', remote_addr)
             else:
                 u_name = "Unknown"
                 faces_found = faces_found + 1
 
         return personne_info, faces_found
 
+#Function to sync database entries 
     def sync(self, revision):
         watcher = Watcher.query.filter_by(db_name='personne').first()
         if(watcher.revision > revision):
@@ -126,8 +127,11 @@ class FaceRecognition(object):
         encodedNumpyData = json.dumps(numpyData, cls=NumpyArrayEncoder)
         return encodedNumpyData
 
+#Function to get all signing entries on a day.
     def getAllSignings(self, signer_host):
-        s = db.session.query(Signing).filter_by(signer_host=signer_host).join(Personne).all()
+        today = datetime.date.today()
+        d = today.strftime("%Y-%m-%d")
+        s = db.session.query(Signing).filter_by(signer_host=signer_host, signing_date=d).join(Personne).all()
         signings = []
         for signing in s:
             signings.append({'personne_id':signing.personne.id,'name':signing.personne.name,

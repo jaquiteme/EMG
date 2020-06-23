@@ -130,7 +130,7 @@ def new_personne():
 
     personne = Personne.query.filter_by(email=email).first()
 
-    if personne: # if a user is found, we want to redirect back to signup page so user can try again
+    if personne:
         flash('Email address already exists')
         return redirect(url_for('auth.personnes'))
 
